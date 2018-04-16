@@ -4,11 +4,6 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * <p>Assumptions:
- * <li>Since requirements state that orders will be delivered sequentially from the same thread I don't care
- * about thread-safety
- *
- * </br></br>
  * @author Adam
  */
 public class SimpleMatchingEngine implements IMatchingEngine {

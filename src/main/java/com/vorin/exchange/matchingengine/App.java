@@ -4,9 +4,6 @@ import java.util.concurrent.TimeUnit;
 import com.google.common.base.Stopwatch;
 
 /**
- * <p>NOTES:
- * <li>Test done in this unusual way since JUnit is not available in this exercise format
- *
  * @author Adam
  */
 public class App {

@@ -23,11 +23,11 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
  * @author Adam
  */
 @SuppressWarnings("checkstyle:all")
-@Warmup(iterations = 10, time = 500, timeUnit = TimeUnit.MILLISECONDS)
-@Measurement(iterations = 15, time = 500, timeUnit = TimeUnit.MILLISECONDS)
+@Warmup(iterations = 5, time = 500, timeUnit = TimeUnit.MILLISECONDS)
+@Measurement(iterations = 10, time = 500, timeUnit = TimeUnit.MILLISECONDS)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Fork(5)
+@Fork(1)
 @State(Scope.Benchmark)
 public class MatchingEngineBenchmark {
 

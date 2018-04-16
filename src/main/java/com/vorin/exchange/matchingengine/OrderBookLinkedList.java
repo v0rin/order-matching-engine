@@ -1,3 +1,6 @@
+package com.vorin.exchange.matchingengine;
+import static java.util.stream.Collectors.toList;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -8,12 +11,12 @@ import java.util.Map;
  *
  * @author Adam
  */
-public class OrderBook implements IOrderBook {
+public class OrderBookLinkedList implements IOrderBook {
 
     private Map<Key, List<IOrder>> orderMap;
 
 
-    public OrderBook() {
+    public OrderBookLinkedList() {
         orderMap = new HashMap<>();
     }
 
@@ -30,6 +33,11 @@ public class OrderBook implements IOrderBook {
         List<IOrder> list = orderMap.computeIfAbsent(new Key(order.getProduct(), order.getCustomerSide()),
                                                      str -> new LinkedList<>());
         list.add(order);
+    }
+
+    @Override
+    public List<IOrder> getUnfullfilledOrders() {
+        return orderMap.values().stream().flatMap(ordersForSecurity -> ordersForSecurity.stream()).collect(toList());
     }
 
     private static class Key {

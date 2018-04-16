@@ -1,3 +1,4 @@
+package com.vorin.exchange.matchingengine;
 import java.util.List;
 
 /**
@@ -12,5 +13,7 @@ public interface IMatchingEngine {
      *  @return list of order IDs that were matched, ordered oldest to newest, empty list if no orders matched
      */
     List<Long> processOrder(IOrder order);
+
+    List<IOrder> getUnfulfilledOrders();
 
 }

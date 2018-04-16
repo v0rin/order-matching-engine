@@ -1,4 +1,8 @@
+package com.vorin.exchange.matchingengine;
 import org.junit.Test;
+
+import com.vorin.exchange.matchingengine.Order;
+import com.vorin.exchange.matchingengine.Side;
 
 public class OrderTest {
 

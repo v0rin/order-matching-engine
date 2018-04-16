@@ -1,3 +1,4 @@
+package com.vorin.exchange.matchingengine;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,9 +19,12 @@ public class SimpleMatchingEngine implements IMatchingEngine {
 
     private IOrderBook orderBook;
 
+    public SimpleMatchingEngine(IOrderBook orderBook) {
+        this.orderBook = orderBook;
+    }
 
     public SimpleMatchingEngine() {
-        orderBook = new OrderBook();
+        this(new OrderBookLinkedList());
     }
 
     @Override
@@ -37,15 +41,11 @@ public class SimpleMatchingEngine implements IMatchingEngine {
                 case BOTH_MATCHED:
                     matchedOrders.add(existingOrder.getOrderId());
                     orderIter.remove();
-                    // The requirements stated that the order being processed is not to be returned if matched.
-                    // It seems unusual but I implemented it this way.
-                    // If it was the below line should be uncommented
-//                    matchedOrders.add(newOrder.getOrderId());
+                    matchedOrders.add(newOrder.getOrderId());
                     return matchedOrders;
 
                 case NEW_MATCHED:
-                    // Same case as above
-//                    matchedOrders.add(newOrder.getOrderId());
+                    matchedOrders.add(newOrder.getOrderId());
                     existingOrder.setSize(existingOrder.getSize() - newOrder.getSize());
                     return matchedOrders;
 
@@ -66,6 +66,11 @@ public class SimpleMatchingEngine implements IMatchingEngine {
         orderBook.add(newOrder);
 
         return matchedOrders;
+    }
+
+    @Override
+    public List<IOrder> getUnfulfilledOrders() {
+        return orderBook.getUnfullfilledOrders();
     }
 
     private Match checkOrdersMatch(IOrder newOrder, IOrder existingOrder) {

@@ -1,3 +1,4 @@
+package com.vorin.exchange.matchingengine;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -27,7 +28,7 @@ public class SimpleMatchingEngineTest {
                                                      new Order(444, "AAPL", Side.BUY, 5000),
                                                      new Order(555, "MSFT", Side.BUY, 20000),
                                                      new Order(666, "AAPL", Side.SELL, 25000));
-        long[][] expected = {{}, {111}, {222}, {}, {}, {333, 444}};
+        long[][] expected = {{}, {111}, {222}, {}, {}, {333, 444, 666}};
 
         // when
         List<List<Long>> actual = ordersToProcess.stream().map(matchingEngine::processOrder).collect(toList());
@@ -41,7 +42,7 @@ public class SimpleMatchingEngineTest {
         // given
         List<IOrder> ordersToProcess = Arrays.asList(new Order(111, "AAPL", Side.BUY, 20000),
                                                      new Order(222, "AAPL", Side.SELL, 20000));
-        long[][] expected = {{}, {111}};
+        long[][] expected = {{}, {111, 222}};
 
         // when
         List<List<Long>> actual = ordersToProcess.stream().map(matchingEngine::processOrder).collect(toList());
@@ -56,7 +57,7 @@ public class SimpleMatchingEngineTest {
         List<IOrder> ordersToProcess = Arrays.asList(new Order(111, "AAPL", Side.BUY, 100000),
                                                      new Order(222, "AAPL", Side.SELL, 20000),
                                                      new Order(333, "AAPL", Side.SELL, 30000));
-        long[][] expected = {{}, {}, {}};
+        long[][] expected = {{}, {222}, {333}};
 
         // when
         List<List<Long>> actual = ordersToProcess.stream().map(matchingEngine::processOrder).collect(toList());
@@ -71,7 +72,7 @@ public class SimpleMatchingEngineTest {
         List<IOrder> ordersToProcess = Arrays.asList(new Order(111, "AAPL", Side.BUY, 10000),
                                                      new Order(222, "AAPL", Side.BUY, 20000),
                                                      new Order(333, "AAPL", Side.SELL, 30000));
-        long[][] expected = {{}, {}, {111, 222}};
+        long[][] expected = {{}, {}, {111, 222, 333}};
 
         // when
         List<List<Long>> actual = ordersToProcess.stream().map(matchingEngine::processOrder).collect(toList());
@@ -116,7 +117,7 @@ public class SimpleMatchingEngineTest {
         List<IOrder> ordersToProcess = Arrays.asList(new Order(111, "AAPL", Side.BUY, 10000),
                                                      new Order(222, "MSFT", Side.BUY, 20000),
                                                      new Order(333, "AAPL", Side.SELL, 10000));
-        long[][] expected = {{}, {}, {111}};
+        long[][] expected = {{}, {}, {111, 333}};
 
         // when
         List<List<Long>> actual = ordersToProcess.stream().map(matchingEngine::processOrder).collect(toList());

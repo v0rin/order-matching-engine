@@ -24,37 +24,74 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
  */
 @SuppressWarnings("checkstyle:all")
 @Warmup(iterations = 5, time = 500, timeUnit = TimeUnit.MILLISECONDS)
-@Measurement(iterations = 10, time = 500, timeUnit = TimeUnit.MILLISECONDS)
+@Measurement(iterations = 5, time = 500, timeUnit = TimeUnit.MILLISECONDS)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Fork(1)
 @State(Scope.Benchmark)
+/**
+ * for ORDER_COUNT = 100
+ * Benchmark                           Mode  Cnt      Score     Error  Units
+ * MatchingEngineBenchmark.arrayDeque  avgt   20  12720.368 ± 244.916  ns/op
+ * MatchingEngineBenchmark.linkedList  avgt   20  13526.286 ± 145.378  ns/op
+ *
+ * for ORDER_COUNT = 1_000
+ * Benchmark                           Mode  Cnt       Score      Error  Units
+ * MatchingEngineBenchmark.arrayDeque  avgt   20  132141.872 ± 2424.578  ns/op
+ * MatchingEngineBenchmark.linkedList  avgt   20  134021.856 ± 3825.727  ns/op
+ *
+ * for ORDER_COUNT = 100_000
+ * Benchmark                           Mode  Cnt         Score        Error  Units
+ * MatchingEngineBenchmark.arrayDeque  avgt   20  13043476.073 ± 205455.449  ns/op
+ * MatchingEngineBenchmark.linkedList  avgt   20  13330323.198 ± 232670.517  ns/op
+ * @author Adam
+ */
 public class MatchingEngineBenchmark {
 
     private static final int ORDER_COUNT = 1_000;
 
+    private IOrder[] orders = new IOrder[ORDER_COUNT];
+    private com.vorin.exchange.matchingenginetuned.IOrder[] ordersTuned =
+            new com.vorin.exchange.matchingenginetuned.IOrder[ORDER_COUNT];
+
     private IMatchingEngine matchingEngine1;
     private IMatchingEngine matchingEngine2;
-    private OrderGenerator orderGenerator;
+    private com.vorin.exchange.matchingenginetuned.IMatchingEngine matchingEngineTuned;
 
     @Setup
     public void setUp() {
         matchingEngine1 = new SimpleMatchingEngine(new OrderBookArrayDeque());
         matchingEngine2 = new SimpleMatchingEngine(new OrderBookLinkedList());
-        orderGenerator = new OrderGenerator();
+        matchingEngineTuned = new com.vorin.exchange.matchingenginetuned.SimpleMatchingEngine(
+                            new com.vorin.exchange.matchingenginetuned.OrderBookArrayDeque());
+        OrderGenerator orderGenerator = new OrderGenerator();
+        com.vorin.exchange.matchingenginetuned.OrderGenerator orderGeneratorTuned =
+                new com.vorin.exchange.matchingenginetuned.OrderGenerator();
+
+        for (int i = 0; i < ORDER_COUNT; i++) {
+            orders[i] = orderGenerator.getNextRandom();
+            ordersTuned[i] = orderGeneratorTuned.getNextRandom();
+        }
     }
 
-    @Benchmark
-    public void arrayDeque(Blackhole bh) {
+//    @Benchmark
+    public void arrayDequeSimpleMatchingEngine(Blackhole bh) {
         for (int i = 0; i < ORDER_COUNT; i++) {
-            bh.consume(matchingEngine1.processOrder(orderGenerator.getNextRandom()));
+            bh.consume(matchingEngine1.processOrder(orders[i]));
         }
     }
 
     @Benchmark
+    public void arrayDequeSimpleMatchingEngineTuned(Blackhole bh) {
+        for (int i = 0; i < ORDER_COUNT; i++) {
+            bh.consume(matchingEngineTuned.processOrder(ordersTuned[i]));
+        }
+    }
+
+//    @Benchmark
     public void linkedList(Blackhole bh) {
         for (int i = 0; i < ORDER_COUNT; i++) {
-            bh.consume(matchingEngine2.processOrder(orderGenerator.getNextRandom()));
+            bh.consume(matchingEngine2.processOrder(orders[i]));
         }
     }
 

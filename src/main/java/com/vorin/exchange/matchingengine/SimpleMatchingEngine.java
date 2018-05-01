@@ -19,7 +19,7 @@ public class SimpleMatchingEngine implements IMatchingEngine {
     }
 
     public SimpleMatchingEngine() {
-        this(new OrderBookLinkedList());
+        this(new OrderBookArrayDeque());
     }
 
     @Override
